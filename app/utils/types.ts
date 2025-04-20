@@ -2,6 +2,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
+  password?: string;
   points: number;
   avatar?: string;
   enrolledCourses: string[];
@@ -55,6 +56,7 @@ export interface SubscriptionPlan {
 
 export type RootStackParamList = {
   Welcome: undefined;
+  Auth: undefined;
   Main: undefined;
   Home: undefined;
   CourseDetail: { courseId: string };

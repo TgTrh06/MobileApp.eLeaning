@@ -52,7 +52,7 @@ const AchievementBadge: React.FC<AchievementBadgeProps> = ({
         styles.badge,
         { backgroundColor: badgeColor, width: badgeSize, height: badgeSize }
       ]}>
-        <StarIcon size={badgeSize * 0.6} color={colors.white} />
+        <StarIcon size={badgeSize * 1} color={colors.white} />
       </View>
       
       <View style={styles.textContainer}>

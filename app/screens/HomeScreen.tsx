@@ -49,7 +49,7 @@ const HomeScreen: React.FC = () => {
   };
 
   // Display welcome text with user name
-  const welcomeText = `Welcome,\n${user?.name || 'Student'}`;
+  const welcomeText = `Welcome, ${user?.name || 'Student'}`;
 
   return (
     <SafeAreaView style={styles.container}>

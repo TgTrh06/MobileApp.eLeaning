@@ -3,7 +3,8 @@ import { LeaderboardUser, User } from '../utils/types';
 export const currentUser: User = {
   id: 'u1',
   name: 'Ikienkinzero',
-  email: 'Ikienkinzero.sanap@example.com',
+  email: 'Ikienkinzero@example.com',
+  password: '123456',
   points: 3500,
   avatar: 'https://images.unsplash.com/photo-1599081593734-5e65dd7abfba',
   enrolledCourses: ['1', '3', '4', '5', '7'],

@@ -12,16 +12,22 @@ import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../utils/colors';
 import { useAuth } from '../context/AuthContext';
+import { useNavigation } from '@react-navigation/native';
 
 const WelcomeScreen: React.FC = () => {
   const { login } = useAuth();
+  const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
+
+  const handleSignIn = () => {
+    navigation.navigate('Auth' as never);
+  };
 
   const handleGoogleLogin = async () => {
     setIsLoading(true);
     try {
       // In a real app, this would integrate with the Google Auth API
-      await login('demo@example.com', 'password');
+      await login('Ikienkinzero@example.com', '123456');
     } catch (error) {
       console.error('Login failed:', error);
     } finally {
@@ -56,16 +62,25 @@ const WelcomeScreen: React.FC = () => {
           </View>
           
           <TouchableOpacity
+            style={styles.signInButton}
+            onPress={handleSignIn}
+          >
+            <Text style={styles.signInButtonText}>
+              Sign In / Create Account
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
             style={styles.googleButton}
             onPress={handleGoogleLogin}
             disabled={isLoading}
           >
             <Image 
-              source={{ uri: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg' }}
+              source={{ uri: 'https://www.google.com/favicon.ico' }}
               style={styles.googleIcon}
             />
             <Text style={styles.googleButtonText}>
-              {isLoading ? 'Logging in...' : 'Login with Google'}
+              {isLoading ? 'Logging in...' : 'Continue with Google'}
             </Text>
           </TouchableOpacity>
           
@@ -124,6 +139,24 @@ const styles = StyleSheet.create({
     height: 240,
     borderRadius: 12,
   },
+  signInButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    borderWidth: 2,
+    borderColor: colors.white,
+    borderRadius: 24,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    width: '100%',
+    marginBottom: 16,
+  },
+  signInButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.white,
+  },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -138,7 +171,7 @@ const styles = StyleSheet.create({
   googleIcon: {
     width: 24,
     height: 24,
-    marginRight: 8,
+    marginRight: 12,
   },
   googleButtonText: {
     fontSize: 16,
