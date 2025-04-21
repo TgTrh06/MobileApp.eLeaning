@@ -1,3 +1,4 @@
+import { courses } from './../data/courses';
 export interface User {
   id: string;
   name: string;
@@ -37,6 +38,29 @@ export interface Chapter {
   content?: string;
 }
 
+export interface Exam {
+  id: string;
+  title: string;
+  description: string;
+  questions: Question[];
+  passingScore: number; // percentage
+  totalScore: number; // total score for the exam
+  coursesCategory: string; // category of the course
+}
+
+export interface Question {
+  id: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  selectedAnswer?: string; // for tracking user's answer
+  isCorrect?: boolean; // for tracking if the answer is correct
+  score: number; // score for the question
+  isLocked?: boolean; // for tracking if the question is locked
+  duration: number; // duration for the question
+  examCategory: string; // category of the course
+}
+
 export interface LeaderboardUser {
   id: string;
   name: string;
@@ -64,5 +88,6 @@ export type RootStackParamList = {
   Profile: undefined;
   Leaderboard: undefined;
   Subscription: undefined;
-  Achievement: { points: number };
+  Achievement: { points: number, Coursecategory: string };
+  CourseExam: { Coursecategory: string };
 };

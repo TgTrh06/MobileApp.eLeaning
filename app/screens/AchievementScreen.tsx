@@ -18,6 +18,7 @@ const AchievementScreen: React.FC = () => {
   const route = useRoute<AchievementScreenRouteProp>();
   const navigation = useNavigation();
   const { points } = route.params;
+  const { Coursecategory } = route.params;
   
   const scaleAnim = new Animated.Value(0.5);
   const opacityAnim = new Animated.Value(0);
@@ -40,6 +41,12 @@ const AchievementScreen: React.FC = () => {
   
   const handleGoBack = () => {
     navigation.goBack();
+  };
+
+  const handleExam = () => {
+    (navigation as any).navigate('CourseExam', {
+      Coursecategory
+    });
   };
 
   return (
@@ -67,8 +74,17 @@ const AchievementScreen: React.FC = () => {
           style={styles.backButton}
           onPress={handleGoBack}
         >
-          <Text style={styles.backButtonText}>
+          <Text style={styles.ButtonText}>
             Go Back to Course
+          </Text>
+        </TouchableOpacity>
+        
+        <TouchableOpacity 
+          style={styles.examButton}
+          onPress={handleExam}
+        >
+          <Text style={styles.ButtonText}>
+            Go to {Coursecategory} Exam
           </Text>
         </TouchableOpacity>
       </View>
@@ -108,10 +124,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     borderRadius: 24,
   },
-  backButtonText: {
+  ButtonText: {
     fontSize: 16,
     fontWeight: '600',
     color: colors.primary,
+  },
+  examButton: {
+    backgroundColor: colors.white,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    borderRadius: 24,
+    marginTop: 20,
   },
 });
 

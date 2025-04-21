@@ -65,7 +65,7 @@ const CourseContentScreen: React.FC = () => {
     // Show achievement if needed
     // For now, we'll just update the UI
     setTimeout(() => {
-      (navigation as any).navigate('Achievement', { points: 10 });
+      (navigation as any).navigate('Achievement', { points: 10, Coursecategory: course.category });
     }, 500);
   };
 

@@ -24,6 +24,7 @@ import {
   AwardIcon, 
   BookIcon 
 } from '../assets/icons';
+import CourseExamScreen from '../screens/CourseExamScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -40,7 +41,25 @@ const HomeStack = () => {
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
       <Stack.Screen name="CourseContent" component={CourseContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
+      <Stack.Screen name="CourseExam" component={CourseExamScreen} />
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
+    </Stack.Navigator>
+  );
+};
+
+const MyCoursesStack = () => {
+  return (
+    <Stack.Navigator 
+      screenOptions={{ 
+        headerShown: false,
+        contentStyle: { backgroundColor: colors.background }
+      }}
+    >
+      <Stack.Screen name="MyCourses" component={MyCoursesScreen} />
+      <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
+      <Stack.Screen name="Achievement" component={AchievementScreen} />
+      <Stack.Screen name="CourseExam" component={CourseExamScreen} />
     </Stack.Navigator>
   );
 };
@@ -88,7 +107,7 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="MyCourses" 
-        component={MyCoursesScreen} 
+        component={MyCoursesStack} 
         options={{
           tabBarLabel: 'My Courses',
           tabBarIcon: ({ color, size }) => (
