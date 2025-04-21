@@ -13,6 +13,7 @@ import MyCoursesScreen from '../screens/MyCoursesScreen';
 import LeaderboardScreen from '../screens/LeaderboardScreen';
 import SubscriptionScreen from '../screens/SubscriptionScreen';
 import AchievementScreen from '../screens/AchievementScreen';
+import ApiTestScreen from '../screens/ApiTestScreen';
 
 import { RootStackParamList } from '../utils/types';
 import { useAuth } from '../context/AuthContext';
@@ -76,7 +77,8 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="LeaderboardTab" 
-        component={LeaderboardScreen} 
+        component={ApiTestScreen} // Replace with LeaderboardScreen when ready - API Test
+        // component={LeaderboardScreen}
         options={{
           tabBarLabel: 'Leaderboard',
           tabBarIcon: ({ color, size }) => (
