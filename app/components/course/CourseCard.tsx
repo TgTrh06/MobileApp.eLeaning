@@ -9,7 +9,7 @@ interface Course {
   name: string;
   level: string;
   price: number;
-  tags: string[];
+  tags: string[] | string;
   time: string;
   author: string;
   banner?: { url: string };

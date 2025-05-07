@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -12,40 +12,17 @@ import Header from '../components/Header';
 import CourseCard from '../components/course/CourseCard';
 import { BookIcon } from '../assets/icons';
 import { useUser } from '@clerk/clerk-expo';
-import { getCourseListLevel } from '../services';
+import { useCourses } from '../context/CoursesContext';
 
 const MyCoursesScreen: React.FC = () => {
   const { user } = useUser();
-  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
-  const [inProgressCourses, setInProgressCourses] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { enrolledCourses, inProgressCourses, loading, error, fetchEnrolledCourses } = useCourses('');
 
   useEffect(() => {
-    fetchCourses();
-  }, []);
-
-  const fetchCourses = async () => {
-    if (!user) {
-      setLoading(false);
-      return;
+    if (user) {
+      fetchEnrolledCourses(user.id);
     }
-
-    try {
-      setLoading(true);
-      // Placeholder: Fetch all courses (e.g., 'basic' as a demo)
-      const resp = await getCourseListLevel('basic'); // Replace with actual enrolled courses endpoint
-      const validCourses = resp.courses.filter((course) => course.banner?.url);
-      setEnrolledCourses(validCourses);
-      setInProgressCourses(validCourses.slice(0, 3)); // Demo: First 3 as in-progress
-      setError(null);
-    } catch (err) {
-      console.error('Error fetching courses:', err);
-      setError('Failed to load courses');
-    } finally {
-      setLoading(false);
-    }
-  };
+  }, [user]);
 
   if (!user) {
     return (
@@ -80,17 +57,20 @@ const MyCoursesScreen: React.FC = () => {
     );
   }
 
+  const limitedInProgressCourses = inProgressCourses.slice(0, 5); // Limit to 5
+  const limitedEnrolledCourses = enrolledCourses.slice(0, 5); // Limit to 5
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>My Courses</Text>
       </View>
       <ScrollView style={styles.scrollView}>
-        {inProgressCourses.length > 0 && (
+        {limitedInProgressCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>In Progress</Text>
             <View style={styles.coursesList}>
-              {inProgressCourses.map((course) => (
+              {limitedInProgressCourses.map((course) => (
                 <CourseCard
                   key={course.id}
                   course={course}
@@ -101,11 +81,11 @@ const MyCoursesScreen: React.FC = () => {
           </View>
         )}
 
-        {enrolledCourses.length > 0 && (
+        {limitedEnrolledCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>All Enrolled Courses</Text>
             <View style={styles.coursesList}>
-              {enrolledCourses.map((course) => (
+              {limitedEnrolledCourses.map((course) => (
                 <CourseCard
                   key={course.id}
                   course={course}
@@ -116,7 +96,7 @@ const MyCoursesScreen: React.FC = () => {
           </View>
         )}
 
-        {enrolledCourses.length === 0 && (
+        {limitedEnrolledCourses.length === 0 && (
           <View style={styles.emptyCoursesContainer}>
             <BookIcon size={48} color={colors.lightGray} />
             <Text style={styles.emptyCoursesText}>

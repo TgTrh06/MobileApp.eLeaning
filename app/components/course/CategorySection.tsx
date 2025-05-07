@@ -4,7 +4,7 @@ import { colors } from '../../utils/colors';
 import CourseCard from './CourseCard';
 import { ChevronRightIcon } from '../../assets/icons';
 import { useNavigation } from '@react-navigation/native';
-import { getCourseListLevel } from '@/app/services';
+import { useCourses } from '../../context/CoursesContext';
 
 interface CategorySectionProps {
   title: string;
@@ -12,18 +12,6 @@ interface CategorySectionProps {
   seeAllEnabled?: boolean;
   containerStyle?: ViewStyle;
   horizontal?: boolean;
-}
-
-interface Course {
-  id: string;
-  name: string;
-  level: string;
-  price: number;
-  tags: string[];
-  time: string;
-  author: string;
-  banner: { url: string };
-  chapters: { id: string }[];
 }
 
 const levelMap: Record<string, 'basic' | 'moderate' | 'advance'> = {
@@ -40,47 +28,20 @@ const CategorySection: React.FC<CategorySectionProps> = ({
   horizontal = true,
 }) => {
   const navigation = useNavigation();
-  const [courses, setCourses] = useState<Course[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const { allCourses, loading, error } = useCourses('');
 
-  useEffect(() => {
-    fetchCourses();
-  }, [level]);
-
-  const fetchCourses = async () => {
-    try {
-      const apiLevel = levelMap[level] || undefined;
-      if (!apiLevel) {
-        console.warn('Invalid level value:', level);
-        setCourses([]);
-        setError('Invalid course level');
-        return;
-      }
-
-      console.log(`Fetching courses for level: ${apiLevel}`);
-      const resp = await getCourseListLevel(apiLevel);
-      console.log('API Response:', JSON.stringify(resp, null, 2));
-
-      if (!resp || !resp.courses || !Array.isArray(resp.courses)) {
-        console.warn('No valid courses found:', resp);
-        setCourses([]);
-        setError('No courses found for this level');
-        return;
-      }
-
-      setCourses(resp.courses);
-      setError(null);
-    } catch (error) {
-      console.error('API Error:', error);
-      setCourses([]);
-      setError('Failed to fetch courses');
-    }
-  };
+  const filteredCourses = allCourses
+    .filter((course) => levelMap[level] === course.level.toLowerCase())
+    .slice(0, 5); // Limit to 5 courses
 
   const handleSeeAll = () => {
-    console.log(`See all ${title}`);
-    // Navigate to a filtered view (implement as needed)
-    // navigation.navigate('CourseList', { level });
+    (navigation as any).navigate('CourseList', {
+      screen: 'CourseList',
+      params: {
+        level: levelMap[level],
+        title,
+      },
+    });
   };
 
   return (
@@ -95,13 +56,15 @@ const CategorySection: React.FC<CategorySectionProps> = ({
         )}
       </View>
 
-      {error ? (
-        <Text style={styles.errorText}>{error}</Text>
-      ) : courses.length === 0 ? (
+      {loading ? (
         <Text style={styles.errorText}>Loading courses...</Text>
+      ) : error ? (
+        <Text style={styles.errorText}>{error}</Text>
+      ) : filteredCourses.length === 0 ? (
+        <Text style={styles.errorText}>No courses found for this level</Text>
       ) : (
         <FlatList
-          data={courses}
+          data={filteredCourses}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <CourseCard course={item} isHorizontal={!horizontal} />

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   StyleSheet,
   View,
@@ -12,141 +12,110 @@ import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
 import CategorySection from '../components/course/CategorySection';
 import CourseCard from '../components/course/CourseCard';
-import { SignedIn, useUser } from '@clerk/clerk-expo';
+import { useUser } from '@clerk/clerk-expo';
 import { useNavigation } from '@react-navigation/native';
-import { getCourseListLevel } from '../services';
+import { useCourses } from '../context/CoursesContext';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
   const { user } = useUser();
+  const { inProgressCourses, searchResults, searchCourses } = useCourses('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  const [inProgressCourses, setInProgressCourses] = useState<any[]>([]);
 
-  // Fetch in-progress courses
-  useEffect(() => {
-  }, []);
-
-  // Handle search
-  const handleSearch = async () => {
+  const handleSearch = () => {
     if (!searchQuery.trim()) {
-      setSearchResults([]);
       setIsSearching(false);
+      searchCourses(''); // Clear search results if query is empty
       return;
     }
-
-    try {
-      setIsSearching(true);
-      const levels = ['basic', 'moderate', 'advance'];
-      let allCourses: any[] = [];
-
-      for (const level of levels) {
-        const resp = await getCourseListLevel(level);
-        allCourses = [...allCourses, ...resp.courses];
-      }
-
-      const filteredCourses = allCourses.filter((course: any) => {
-        const query = searchQuery.toLowerCase();
-        const nameMatch = course.name.toLowerCase().includes(query);
-        const tagMatch = course.tags.some((tag: string) =>
-          tag.toLowerCase().includes(query)
-        );
-        const authorMatch = course.author.toLowerCase().includes(query);
-        return nameMatch || tagMatch || authorMatch;
-      });
-
-      setSearchResults(filteredCourses);
-    } catch (error) {
-      console.error('Search error:', error);
-      setSearchResults([]);
-    }
+    setIsSearching(true);
+    searchCourses(searchQuery);
   };
 
-  // Clear search
   const clearSearch = () => {
     setSearchQuery('');
-    setSearchResults([]);
     setIsSearching(false);
+    searchCourses(''); // Clear search results
   };
 
+  const limitedInProgressCourses = inProgressCourses.slice(0, 5); // Already limited to 5 in context
+
   return (
-    <SignedIn>
-      <SafeAreaView style={styles.container}>
-        <Header title="" />
-        <View style={styles.welcomeContainer}>
-          <Text style={styles.welcomeText}>
-            Hello, {user?.emailAddresses[0].emailAddress}
-          </Text>
-        </View>
-        <SearchBar
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          onSubmit={handleSearch}
-        />
-        <ScrollView
-          style={styles.scrollView}
-          showsVerticalScrollIndicator={false}
-          contentContainerStyle={styles.scrollContent}
-        >
-          {isSearching ? (
-            <View style={styles.searchResultsContainer}>
-              <View style={styles.searchHeaderContainer}>
-                <Text style={styles.searchResultsTitle}>
-                  Search Results ({searchResults.length})
-                </Text>
-                <TouchableOpacity onPress={clearSearch}>
-                  <Text style={styles.clearSearchText}>Clear</Text>
-                </TouchableOpacity>
+    <SafeAreaView style={styles.container}>
+      <Header title="" />
+      <View style={styles.welcomeContainer}>
+        <Text style={styles.welcomeText}>
+          Hello, {user?.emailAddresses[0].emailAddress ?? 'Guest'}
+        </Text>
+      </View>
+      <SearchBar
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onSubmit={handleSearch}
+      />
+      <ScrollView
+        style={styles.scrollView}
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}
+      >
+        {isSearching ? (
+          <View style={styles.searchResultsContainer}>
+            <View style={styles.searchHeaderContainer}>
+              <Text style={styles.searchResultsTitle}>
+                Search Results ({searchResults.length})
+              </Text>
+              <TouchableOpacity onPress={clearSearch}>
+                <Text style={styles.clearSearchText}>Clear</Text>
+              </TouchableOpacity>
+            </View>
+            {searchResults.length > 0 ? (
+              <View style={styles.searchResultsList}>
+                {searchResults.map((course) => (
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    isHorizontal={true}
+                    showPrice={true}
+                  />
+                ))}
               </View>
-              {searchResults.length > 0 ? (
-                <View style={styles.searchResultsList}>
-                  {searchResults.map((course) => (
+            ) : (
+              <View style={styles.noResultsContainer}>
+                <Text style={styles.noResultsText}>
+                  No courses found for "{searchQuery}"
+                </Text>
+              </View>
+            )}
+          </View>
+        ) : (
+          <>
+            {limitedInProgressCourses.length > 0 && (
+              <View style={styles.inProgressContainer}>
+                <Text style={styles.sectionTitle}>In Progress</Text>
+                <ScrollView
+                  horizontal
+                  showsHorizontalScrollIndicator={false}
+                  contentContainerStyle={styles.progressCoursesContainer}
+                >
+                  {limitedInProgressCourses.map((course) => (
                     <CourseCard
                       key={course.id}
                       course={course}
                       isHorizontal={true}
-                      showPrice={true}
+                      showPrice={false}
                     />
                   ))}
-                </View>
-              ) : (
-                <View style={styles.noResultsContainer}>
-                  <Text style={styles.noResultsText}>
-                    No courses found for "{searchQuery}"
-                  </Text>
-                </View>
-              )}
-            </View>
-          ) : (
-            <>
-              {inProgressCourses.length > 0 && (
-                <View style={styles.inProgressContainer}>
-                  <Text style={styles.sectionTitle}>In Progress</Text>
-                  <ScrollView
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={styles.progressCoursesContainer}
-                  >
-                    {inProgressCourses.map((course) => (
-                      <CourseCard
-                        key={course.id}
-                        course={course}
-                        isHorizontal={true}
-                        showPrice={false}
-                      />
-                    ))}
-                  </ScrollView>
-                </View>
-              )}
-              <CategorySection title="Basic Courses" level="Basic" />
-              <CategorySection title="Moderate Courses" level="Moderate" />
-              <CategorySection title="Advanced Courses" level="Advance" />
-            </>
-          )}
-        </ScrollView>
-      </SafeAreaView>
-    </SignedIn>
+                </ScrollView>
+              </View>
+            )}
+            <CategorySection title="Basic Courses" level="Basic" />
+            <CategorySection title="Moderate Courses" level="Moderate" />
+            <CategorySection title="Advanced Courses" level="Advance" />
+          </>
+        )}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
