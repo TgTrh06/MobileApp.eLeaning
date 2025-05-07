@@ -1,23 +1,52 @@
-import React from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
+import React, { useState, useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
   ScrollView,
   SafeAreaView,
-  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
-import { useCourses } from '../context/CoursesContext';
 import Header from '../components/Header';
-import CourseCard from '../components/CourseCard';
+import CourseCard from '../components/course/CourseCard';
 import { BookIcon } from '../assets/icons';
+import { useUser } from '@clerk/clerk-expo';
+import { getCourseListLevel } from '../services';
 
 const MyCoursesScreen: React.FC = () => {
-  const { user } = useAuth();
-  const { enrolledCourses, inProgressCourses } = useCourses();
-  
+  const { user } = useUser();
+  const [enrolledCourses, setEnrolledCourses] = useState<any[]>([]);
+  const [inProgressCourses, setInProgressCourses] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchCourses();
+  }, []);
+
+  const fetchCourses = async () => {
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    try {
+      setLoading(true);
+      // Placeholder: Fetch all courses (e.g., 'basic' as a demo)
+      const resp = await getCourseListLevel('basic'); // Replace with actual enrolled courses endpoint
+      const validCourses = resp.courses.filter((course) => course.banner?.url);
+      setEnrolledCourses(validCourses);
+      setInProgressCourses(validCourses.slice(0, 3)); // Demo: First 3 as in-progress
+      setError(null);
+    } catch (err) {
+      console.error('Error fetching courses:', err);
+      setError('Failed to load courses');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -29,43 +58,64 @@ const MyCoursesScreen: React.FC = () => {
     );
   }
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header title="My Courses" showBack={false} showProfile={false} />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header title="My Courses" showBack={false} showProfile={false} />
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>{error}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>My Courses</Text>
       </View>
-      
       <ScrollView style={styles.scrollView}>
         {inProgressCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>In Progress</Text>
             <View style={styles.coursesList}>
               {inProgressCourses.map((course) => (
-                <CourseCard 
-                  key={course.id} 
-                  course={course} 
-                  isHorizontal={true} 
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  isHorizontal={true}
                 />
               ))}
             </View>
           </View>
         )}
-        
+
         {enrolledCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>All Enrolled Courses</Text>
             <View style={styles.coursesList}>
               {enrolledCourses.map((course) => (
-                <CourseCard 
-                  key={course.id} 
-                  course={course} 
-                  isHorizontal={true} 
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  isHorizontal={true}
                 />
               ))}
             </View>
           </View>
         )}
-        
+
         {enrolledCourses.length === 0 && (
           <View style={styles.emptyCoursesContainer}>
             <BookIcon size={48} color={colors.lightGray} />
@@ -106,6 +156,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textSecondary,
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
     flex: 1,

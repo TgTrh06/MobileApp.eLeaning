@@ -13,6 +13,7 @@ import { subscriptionPlans } from '../data/users';
 import Header from '../components/Header';
 import SubscriptionCard from '../components/SubscriptionCard';
 import { GiftIcon } from '../assets/icons';
+import { SignedIn } from '@clerk/clerk-expo';
 
 const SubscriptionScreen: React.FC = () => {
   const [selectedPlanId, setSelectedPlanId] = useState(subscriptionPlans[0].id);
@@ -28,6 +29,7 @@ const SubscriptionScreen: React.FC = () => {
   };
 
   return (
+      <SignedIn>
     <SafeAreaView style={styles.container}>
       <Header showBack title="Subscription" />
       
@@ -73,6 +75,7 @@ const SubscriptionScreen: React.FC = () => {
         </View>
       </ScrollView>
     </SafeAreaView>
+    </SignedIn>
   );
 };
 

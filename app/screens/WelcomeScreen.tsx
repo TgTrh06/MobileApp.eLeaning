@@ -11,29 +11,29 @@ import {
 import { StatusBar } from 'expo-status-bar';
 import { LinearGradient } from 'expo-linear-gradient';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
+// import { useAuth } from '../context/AuthContext';
 import { useNavigation } from '@react-navigation/native';
 
 const WelcomeScreen: React.FC = () => {
-  const { login } = useAuth();
+  // const { login } = useAuth();
   const navigation = useNavigation();
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSignIn = () => {
-    navigation.navigate('Auth' as never);
+    navigation.navigate('SignIn' as never);
   };
 
-  const handleGoogleLogin = async () => {
-    setIsLoading(true);
-    try {
-      // In a real app, this would integrate with the Google Auth API
-      await login('Ikienkinzero@example.com', '123456');
-    } catch (error) {
-      console.error('Login failed:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  // const handleGoogleLogin = async () => {
+  //   setIsLoading(true);
+  //   try {
+  //     // In a real app, this would integrate with the Google Auth API
+  //     await login('Ikienkinzero@example.com', '123456');
+  //   } catch (error) {
+  //     console.error('Login failed:', error);
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   return (
     <View style={styles.container}>
@@ -72,7 +72,7 @@ const WelcomeScreen: React.FC = () => {
 
           <TouchableOpacity
             style={styles.googleButton}
-            onPress={handleGoogleLogin}
+            // onPress={handleGoogleLogin}
             disabled={isLoading}
           >
             <Image 

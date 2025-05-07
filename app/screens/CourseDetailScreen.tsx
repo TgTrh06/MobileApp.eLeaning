@@ -18,6 +18,7 @@ import { formatDuration, formatPrice } from '../utils/helpers';
 import Header from '../components/Header';
 import ChapterItem from '../components/ChapterItem';
 import { BookIcon, ClockIcon } from '../assets/icons';
+import { SignedIn } from '@clerk/clerk-expo';
 
 type CourseDetailScreenRouteProp = RouteProp<RootStackParamList, 'CourseDetail'>;
 
@@ -25,7 +26,7 @@ const CourseDetailScreen: React.FC = () => {
   const route = useRoute<CourseDetailScreenRouteProp>();
   const navigation = useNavigation();
   const { courseId } = route.params;
-  const { getCourse } = useCourses();
+  const { getCourse } = useCourses('');
   const { user } = useAuth();
   
   const [course, setCourse] = useState<any>(null);
@@ -89,6 +90,7 @@ const CourseDetailScreen: React.FC = () => {
   }
 
   return (
+    <SignedIn>
     <SafeAreaView style={styles.container}>
       <Header showBack title="" />
       
@@ -169,6 +171,7 @@ const CourseDetailScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </SignedIn>
   );
 };
 

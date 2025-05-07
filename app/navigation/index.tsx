@@ -4,19 +4,17 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import WelcomeScreen from '../screens/WelcomeScreen';
-import AuthScreen from '../screens/AuthScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
-import CourseDetailScreen from '../screens/CourseDetailScreen';
-import CourseContentScreen from '../screens/CourseContentScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import MyCoursesScreen from '../screens/MyCoursesScreen';
-import LeaderboardScreen from '../screens/LeaderboardScreen';
-import SubscriptionScreen from '../screens/SubscriptionScreen';
+// import CourseDetailScreen from '../screens/CourseDetailScreen';
+// import CourseContentScreen from '../screens/CourseContentScreen';
+// import ProfileScreen from '../screens/ProfileScreen';
+// import MyCoursesScreen from '../screens/MyCoursesScreen';
+// import LeaderboardScreen from '../screens/LeaderboardScreen';
+// import SubscriptionScreen from '../screens/SubscriptionScreen';
 import AchievementScreen from '../screens/AchievementScreen';
-import ApiTestScreen from '../screens/ApiTestScreen';
 
-import { RootStackParamList } from '../utils/types';
-import { useAuth } from '../context/AuthContext';
 import { colors } from '../utils/colors';
 import { 
   HomeIcon, 
@@ -24,7 +22,15 @@ import {
   AwardIcon, 
   BookIcon 
 } from '../assets/icons';
+// import CourseExamScreen from '../screens/CourseExamScreen';
+import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
+import CourseDetailScreen from '../screens/CourseDetailScreen';
+import CourseContentScreen from '../screens/CourseContentScreen';
 import CourseExamScreen from '../screens/CourseExamScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
+import MyCoursesScreen from '../screens/MyCoursesScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -96,8 +102,7 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="LeaderboardTab" 
-        component={ApiTestScreen} // Replace with LeaderboardScreen when ready - API Test
-        // component={LeaderboardScreen}
+        component={LeaderboardScreen}
         options={{
           tabBarLabel: 'Leaderboard',
           tabBarIcon: ({ color, size }) => (
@@ -130,20 +135,25 @@ const MainTabs = () => {
 };
 
 const Navigation = () => {
-  const { isLoggedIn } = useAuth();
+  const { isSignedIn } = useUser(); // Check if the user is signed in
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isLoggedIn ? (
-          <>
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="Auth" component={AuthScreen} />
-          </>
-        ) : (
+      {/* Hiển thị màn hình chính khi đã đăng nhập */}
+      <SignedIn>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
           <Stack.Screen name="Main" component={MainTabs} />
-        )}
-      </Stack.Navigator>
+        </Stack.Navigator>
+      </SignedIn>
+
+      {/* Hiển thị màn hình đăng nhập/đăng ký khi chưa đăng nhập */}
+      <SignedOut>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="Register" component={SignUpScreen} />
+        </Stack.Navigator>
+      </SignedOut>
     </NavigationContainer>
   );
 };

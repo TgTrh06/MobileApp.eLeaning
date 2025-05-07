@@ -4,7 +4,7 @@ import { useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
 import { BackIcon } from '../assets/icons';
 import UserPoints from './UserPoints';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, useUser } from '@clerk/clerk-expo';
 
 interface HeaderProps {
   title?: string;
@@ -20,9 +20,9 @@ const Header: React.FC<HeaderProps> = ({
   showPoints = true,
 }) => {
   const navigation = useNavigation();
-  const { user } = useAuth();
+  const { isLoaded, isSignedIn, user } = useUser();
 
-  return (
+  return isLoaded&&(
     <View style={styles.container}>
       <View style={styles.leftContainer}>
         {showBack && (
@@ -35,7 +35,7 @@ const Header: React.FC<HeaderProps> = ({
       </View>
 
       <View style={styles.rightContainer}>
-        {showPoints && user && <UserPoints points={user.points} />}
+        {/* {showPoints && user && <UserPoints points={user.points} />} */}
         
         {showProfile && user && (
           <TouchableOpacity 
@@ -43,7 +43,7 @@ const Header: React.FC<HeaderProps> = ({
             onPress={() => (navigation as any).navigate('ProfileTab')}
           >
             <Image
-              source={{ uri: user.avatar || 'https://i.pravatar.cc/150' }}
+              source={{ uri: user?.imageUrl}}
               style={styles.profileImage}
             />
           </TouchableOpacity>
