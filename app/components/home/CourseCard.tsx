@@ -3,18 +3,7 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../utils/colors";
 import { ClockIcon, BookIcon } from "../../assets/icons";
-
-interface Course {
-  id: string;
-  name: string;
-  level: string;
-  price: number;
-  tags: string[] | string;
-  time: string;
-  author: string;
-  banner?: { url: string };
-  chapters: { id: string }[];
-}
+import { Course } from "@/app/utils/types";
 
 interface CourseCardProps {
   course: Course;
@@ -30,7 +19,7 @@ const CourseCard: React.FC<CourseCardProps> = ({
   const navigation = useNavigation();
 
   const handlePress = () => {
-    (navigation as any).navigate("CourseDetail", { courseId: course.id });
+    (navigation as any).navigate("CourseDetail", { course });
   };
 
   return (

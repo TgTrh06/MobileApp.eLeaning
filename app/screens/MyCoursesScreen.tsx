@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { colors } from '../utils/colors';
 import Header from '../components/Header';
-import CourseCard from '../components/course/CourseCard';
+import CourseCard from '../components/home/CourseCard';
 import { BookIcon } from '../assets/icons';
 import { useUser } from '@clerk/clerk-expo';
 import { useCourses } from '../context/CoursesContext';

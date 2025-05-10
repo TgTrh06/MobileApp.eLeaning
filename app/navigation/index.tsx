@@ -7,12 +7,6 @@ import WelcomeScreen from '../screens/WelcomeScreen';
 import SignInScreen from '../screens/SignInScreen';
 import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
-// import CourseDetailScreen from '../screens/CourseDetailScreen';
-// import CourseContentScreen from '../screens/CourseContentScreen';
-// import ProfileScreen from '../screens/ProfileScreen';
-// import MyCoursesScreen from '../screens/MyCoursesScreen';
-// import LeaderboardScreen from '../screens/LeaderboardScreen';
-// import SubscriptionScreen from '../screens/SubscriptionScreen';
 import AchievementScreen from '../screens/AchievementScreen';
 
 import { colors } from '../utils/colors';
@@ -23,14 +17,15 @@ import {
   BookIcon 
 } from '../assets/icons';
 // import CourseExamScreen from '../screens/CourseExamScreen';
-import { SignedIn, SignedOut, useUser } from '@clerk/clerk-expo';
-// import CourseDetailScreen from '../screens/CourseDetailScreen';
-// import CourseContentScreen from '../screens/CourseContentScreen';
+import { SignedIn, SignedOut } from '@clerk/clerk-expo';
 import CourseExamScreen from '../screens/CourseExamScreen';
 import SubscriptionScreen from '../screens/SubscriptionScreen';
 import MyCoursesScreen from '../screens/MyCoursesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LeaderboardScreen from '../screens/LeaderboardScreen';
+import CourseDetailScreen from '../screens/CourseDetailScreen';
+import CourseContentScreen from '../screens/CourseContentScreen';
+import { CoursesProvider } from '../context/CoursesContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -44,8 +39,8 @@ const HomeStack = () => {
       }}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
-      {/* <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} /> */}
+      <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
@@ -62,8 +57,8 @@ const MyCoursesStack = () => {
       }}
     >
       <Stack.Screen name="MyCourses" component={MyCoursesScreen} />
-      {/* <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} /> */}
+      <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
+      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
     </Stack.Navigator>
@@ -135,15 +130,16 @@ const MainTabs = () => {
 };
 
 const Navigation = () => {
-  const { isSignedIn } = useUser(); // Check if the user is signed in
 
   return (
     <NavigationContainer>
       {/* Hiển thị màn hình chính khi đã đăng nhập */}
       <SignedIn>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Main" component={MainTabs} />
-        </Stack.Navigator>
+        <CoursesProvider>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Main" component={MainTabs} />
+          </Stack.Navigator>
+        </CoursesProvider>
       </SignedIn>
 
       {/* Hiển thị màn hình đăng nhập/đăng ký khi chưa đăng nhập */}

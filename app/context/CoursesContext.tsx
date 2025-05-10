@@ -6,6 +6,7 @@ import React, {
   ReactNode,
 } from "react";
 import { getCourseListLevel } from "../services";
+import { Course } from "../utils/types";
 
 import {
   courses,
@@ -15,17 +16,6 @@ import {
   getCourseById,
 } from "../data/courses";
 
-interface Course {
-  id: string;
-  name: string;
-  level: string;
-  price: number;
-  tags: string[] | string;
-  time: string;
-  author: string;
-  banner?: { url: string };
-  chapters: { id: string }[];
-}
 
 interface CoursesContextType {
   allCourses: Course[];
@@ -153,10 +143,10 @@ export const CoursesProvider: React.FC<{ children: ReactNode }> = ({
   );
 };
 
-export const useCourses = (searchQuery: string) => {
+export const useCourses = () => {
   const context = useContext(CoursesContext);
   if (!context) {
-    throw new Error("useCourses must be used within a CoursesProvider");
+    throw new Error('useCourses must be used within a CoursesProvider');
   }
   return context;
 };

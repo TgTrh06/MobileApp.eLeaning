@@ -10,8 +10,8 @@ import {
 import { colors } from '../utils/colors';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
-import CategorySection from '../components/course/CategorySection';
-import CourseCard from '../components/course/CourseCard';
+import CategorySection from '../components/home/CategorySection';
+import CourseCard from '../components/home/CourseCard';
 import { useUser } from '@clerk/clerk-expo';
 import { useNavigation } from '@react-navigation/native';
 import { useCourses } from '../context/CoursesContext';

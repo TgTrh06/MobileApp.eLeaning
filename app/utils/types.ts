@@ -19,23 +19,32 @@ export interface CourseProgress {
 
 export interface Course {
   id: string;
-  title: string;
-  thumbnail: string;
-  category: "Basic Courses" | "Advance Courses" | "Project & Video Courses";
-  chaptersCount: number;
-  duration: number;
-  price: number | "Free";
-  description: string;
+  name: string;
+  level: string;
+  price: number;
+  tags: string[] | string;
+  time: string;
+  author: string;
+  description: {
+    markdown: string;
+  };
+  banner?: {
+    url: string;
+  };
   chapters: Chapter[];
-  tags: string[];
 }
 
 export interface Chapter {
   id: string;
   title: string;
-  duration: number;
-  isLocked: boolean;
-  content?: string;
+  content: {
+    content: {
+      markdown: string;
+    };
+    output: {
+      markdown: string;
+    };
+  };
 }
 
 export interface Exam {

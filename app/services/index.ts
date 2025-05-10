@@ -4,21 +4,7 @@ const MASTER_URL="https://eu-west-2.cdn.hygraph.com/content/cm9pg8vt001ry08vyt2w
 
 // Define the response type for the GraphQL query
 interface CourseListResponse {
-    courses: {
-        id: string;
-        name: string;
-        level: string;
-        price: number;
-        tags: string[];
-        time: string;
-        author: string;
-        banner: {
-            url: string;
-        };
-        chapters: {
-            id: string;
-        }[];
-      }[];
+    courses: Course[];
 }
 
 export const getCourseListLevel = async (level?: string)
@@ -32,12 +18,24 @@ export const getCourseListLevel = async (level?: string)
                 price
                 tags
                 time
-                author
+                author    
+                description {
+                    markdown
+                }                
                 banner {
                     url
                 }
                 chapters {
+                    title
                     id
+                    content {
+                        content {
+                            markdown
+                        }
+                        output {
+                            markdown
+                        }
+                    }
                 }
             }
         }
@@ -57,11 +55,23 @@ export const getCourseList = async () => {
                 tags
                 time
                 author
+                description {
+                    markdown
+                }        
                 banner {
-                url
+                    url
                 }
                 chapters {
-                id
+                    title
+                    id
+                    content {
+                        content {
+                            markdown
+                        }
+                        output {
+                            markdown
+                        }
+                    }
                 }
             }
         }
