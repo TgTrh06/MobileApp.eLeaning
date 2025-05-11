@@ -1,4 +1,6 @@
+import { ViewStyle } from 'react-native';
 import { courses } from './../data/courses';
+
 export interface User {
   id: string;
   name: string;
@@ -15,6 +17,14 @@ export interface CourseProgress {
   completedChapters: string[];
   lastChapter: string;
   percentage: number;
+}
+
+export interface CategorySectionProps {
+  title: string;
+  level: string; // e.g., "Basic", "Moderate", "Advance"
+  seeAllEnabled?: boolean;
+  containerStyle?: ViewStyle;
+  horizontal?: boolean;
 }
 
 export interface Course {
@@ -37,14 +47,19 @@ export interface Course {
 export interface Chapter {
   id: string;
   title: string;
+  content: Content[];
+}
+
+export interface Content {
+  heading: string;
   content: {
-    content: {
-      markdown: string;
-    };
-    output: {
-      markdown: string;
-    };
+    markdown?: string; // Made optional
+    html: string;
   };
+  output: {
+    markdown?: string; // Made optional
+    html: string;
+  } | null;
 }
 
 export interface Exam {
@@ -109,11 +124,12 @@ export interface SubscriptionPlan {
 
 export type RootStackParamList = {
   Welcome: undefined;
-  Auth: undefined;
+  SignIn: undefined;
+  Register: undefined;
   Main: undefined;
   Home: undefined;
-  CourseDetail: { courseId: string };
-  CourseContent: { courseId: string; chapterId: string };
+  CourseDetail: { course: Course };
+  ChapterContent: { contentList: Content[] };
   Profile: undefined;
   Leaderboard: undefined;
   Subscription: undefined;

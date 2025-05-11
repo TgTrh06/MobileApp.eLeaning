@@ -29,11 +29,14 @@ export const getCourseListLevel = async (level?: string)
                     title
                     id
                     content {
+                        heading
                         content {
                             markdown
+                            html
                         }
                         output {
                             markdown
+                            html
                         }
                     }
                 }
@@ -65,11 +68,14 @@ export const getAllCourses = async () => {
                     title
                     id
                     content {
+                        heading
                         content {
                             markdown
+                            html
                         }
                         output {
                             markdown
+                            html
                         }
                     }
                 }

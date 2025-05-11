@@ -5,14 +5,7 @@ import CourseCard from './CourseCard';
 import { ChevronRightIcon } from '../../assets/icons';
 import { useNavigation } from '@react-navigation/native';
 import { useCourses } from '../../context/CoursesContext';
-
-interface CategorySectionProps {
-  title: string;
-  level: string; // e.g., "Basic", "Moderate", "Advance"
-  seeAllEnabled?: boolean;
-  containerStyle?: ViewStyle;
-  horizontal?: boolean;
-}
+import { CategorySectionProps } from '@/app/utils/types';
 
 const levelMap: Record<string, 'basic' | 'moderate' | 'advance'> = {
   Basic: 'basic',

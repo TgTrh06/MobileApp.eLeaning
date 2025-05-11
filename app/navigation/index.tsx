@@ -16,7 +16,6 @@ import {
   AwardIcon, 
   BookIcon 
 } from '../assets/icons';
-// import CourseExamScreen from '../screens/CourseExamScreen';
 import { SignedIn, SignedOut } from '@clerk/clerk-expo';
 import CourseExamScreen from '../screens/CourseExamScreen';
 import SubscriptionScreen from '../screens/SubscriptionScreen';
@@ -24,7 +23,7 @@ import MyCoursesScreen from '../screens/MyCoursesScreen';
 import ProfileScreen from '../screens/ProfileScreen';
 import LeaderboardScreen from '../screens/LeaderboardScreen';
 import CourseDetailScreen from '../screens/CourseDetailScreen';
-import CourseContentScreen from '../screens/CourseContentScreen';
+import ChapterContentScreen from '../screens/ChapterContentScreen';
 import { CoursesProvider } from '../context/CoursesContext';
 
 const Stack = createNativeStackNavigator();
@@ -40,7 +39,7 @@ const HomeStack = () => {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
+      <Stack.Screen name="ChapterContent" component={ChapterContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
@@ -58,7 +57,7 @@ const MyCoursesStack = () => {
     >
       <Stack.Screen name="MyCourses" component={MyCoursesScreen} />
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
+      <Stack.Screen name="ChapterContent" component={ChapterContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
     </Stack.Navigator>

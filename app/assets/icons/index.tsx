@@ -85,7 +85,7 @@ export const PlayIcon: React.FC<{ size?: number; color?: string }> = ({
   size = 24, 
   color = colors.primary 
 }) => {
-  return <Ionicons name="play-circle" size={size} color={color} />;
+  return <FontAwesome5 name="play" size={size} color={color} />;
 };
 
 export const ClockIcon: React.FC<{ size?: number; color?: string }> = ({ 

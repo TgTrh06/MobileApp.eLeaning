@@ -3,7 +3,8 @@ import { StyleSheet, View, Text, Image, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { colors } from "../../utils/colors";
 import { ClockIcon, BookIcon } from "../../assets/icons";
-import { Course } from "@/app/utils/types";
+import { Course, RootStackParamList } from "@/app/utils/types";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 interface CourseCardProps {
   course: Course;
@@ -11,12 +12,15 @@ interface CourseCardProps {
   showPrice?: boolean;
 }
 
+// Define navigation prop type
+type NavigationProp = NativeStackNavigationProp<RootStackParamList>;
+
 const CourseCard: React.FC<CourseCardProps> = ({
   course,
   isHorizontal = false,
   showPrice = true,
 }) => {
-  const navigation = useNavigation();
+  const navigation = useNavigation<NavigationProp>();
 
   const handlePress = () => {
     (navigation as any).navigate("CourseDetail", { course });

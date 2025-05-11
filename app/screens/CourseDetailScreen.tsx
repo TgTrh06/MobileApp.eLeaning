@@ -12,14 +12,6 @@ import { ScrollView } from "react-native-gesture-handler";
 import { enrollCourse, getUserEnrollCourse } from "../services";
 import { useUser } from "@clerk/clerk-expo";
 
-const notify = (type: string, message: string) => {
-  Toast.show({
-    type: type, // info | success | error
-    text1: message,
-    position: 'bottom'
-  });
-};
-
 export default function CourseDetailScreen() {
   const navigation = useNavigation();
   const params = useRoute().params as { course: Course };
@@ -28,6 +20,14 @@ export default function CourseDetailScreen() {
 
   const userEmail = user?.primaryEmailAddress?.emailAddress;
   const courseId = params?.course?.id;
+    
+  const notify = (type: string, message: string) => {
+    Toast.show({
+      type: type, // info | success | error
+      text1: message,
+      position: 'bottom'
+    });
+  }
 
   useEffect(() => {
     console.log("Course params:", params?.course);
@@ -92,13 +92,18 @@ export default function CourseDetailScreen() {
         >
             <BackIcon size={40} color={colors.black} />
         </TouchableOpacity>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <ScrollView 
+          showsVerticalScrollIndicator={false}
+        >
           <DetailSection 
             course={params.course} 
             userEnrolledCourses={userEnrolledCourseList}
             enrollCourse={UserEnrollCourse}
           />
-          <ChapterSection chapterList={params.course.chapters || []} />
+          <ChapterSection 
+            chapterList={params.course.chapters || []}
+            userEnrolledCourses={userEnrolledCourseList}
+          />
         </ScrollView>
       </SafeAreaView>
     )
