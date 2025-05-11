@@ -11,6 +11,7 @@ import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
 import { RootStackParamList } from '../utils/types';
 import AchievementBadge from '../components/AchievementBadge';
+import { SignedIn } from '@clerk/clerk-expo';
 
 type AchievementScreenRouteProp = RouteProp<RootStackParamList, 'Achievement'>;
 
@@ -50,6 +51,7 @@ const AchievementScreen: React.FC = () => {
   };
 
   return (
+    <SignedIn>
     <SafeAreaView style={styles.container}>
       <View style={styles.content}>
         <Text style={styles.congratsText}>Congratulation!</Text>
@@ -89,6 +91,7 @@ const AchievementScreen: React.FC = () => {
         </TouchableOpacity>
       </View>
     </SafeAreaView>
+    </SignedIn>
   );
 };
 

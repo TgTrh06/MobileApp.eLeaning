@@ -8,6 +8,7 @@ import { useNavigation } from '@react-navigation/native';
 import QuestionItem from '../components/QuestionAndAnswer';
 import { useAuth } from '../context/AuthContext';
 import Header from '../components/Header';
+import { SignedIn } from '@clerk/clerk-expo';
 
 const CourseExamScreen: React.FC = () => {
   const { user } = useAuth();
@@ -35,6 +36,7 @@ const CourseExamScreen: React.FC = () => {
   );
 
   return (
+    <SignedIn>
     <View style={styles.container}>
       <Text style={styles.header}>Course Exams</Text>
       <Text style={styles.subHeader}>Questions</Text>
@@ -53,6 +55,7 @@ const CourseExamScreen: React.FC = () => {
         </Text>
       </TouchableOpacity>
     </View>
+    </SignedIn>
   );
 };
 

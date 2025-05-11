@@ -10,8 +10,6 @@ import {
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
-import { useCourses } from '../context/CoursesContext';
 import Header from '../components/Header';
 import CourseCard from '../components/CourseCard';
 import {
@@ -23,19 +21,17 @@ import {
   ChevronRightIcon
 } from '../assets/icons';
 import UserPoints from '../components/UserPoints';
+import { SignedIn, useUser } from '@clerk/clerk-expo';
+import { SignOutButton } from '../components/SignOutButton';
 
 const ProfileScreen: React.FC = () => {
   const navigation = useNavigation();
-  const { user, logout } = useAuth();
-  const { enrolledCourses } = useCourses();
+  const { user } = useUser();
 
   const handleSubscriptionPress = () => {
     (navigation as any).navigate('HomeTab', { screen: 'Subscription' });
   };
 
-  const handleLogout = () => {
-    logout();
-  };
 
   if (!user) {
     return (
@@ -49,6 +45,7 @@ const ProfileScreen: React.FC = () => {
   }
 
   return (
+    <SignedIn>
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>Profile</Text>
@@ -57,15 +54,15 @@ const ProfileScreen: React.FC = () => {
       <ScrollView style={styles.scrollView}>
         <View style={styles.profileHeader}>
           <Image
-            source={{ uri: user.avatar || 'https://i.pravatar.cc/150' }}
+            source={{ uri: user?.imageUrl}}
             style={styles.profileImage}
           />
 
-          <Text style={styles.userName}>{user.name}</Text>
+          <Text style={styles.userName}>{user?.emailAddresses[0].emailAddress}</Text>
 
           <View style={styles.pointsContainer}>
             <TrophyIcon size={24} color={colors.yellow} />
-            <Text style={styles.pointsText}>{user.points} Points</Text>
+            <Text style={styles.pointsText}>1000 Points</Text>
           </View>
         </View>
 
@@ -107,18 +104,11 @@ const ProfileScreen: React.FC = () => {
             <ChevronRightIcon size={20} color={colors.darkGray} />
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.menuItem} onPress={handleLogout}>
-            <View style={styles.menuIconContainer}>
-              <LogoutIcon size={20} color={colors.error} />
-            </View>
-            <Text style={[styles.menuText, { color: colors.error }]}>Logout</Text>
-            <ChevronRightIcon size={20} color={colors.darkGray} />
-          </TouchableOpacity>
+          <SignOutButton/>
         </View>
-
-
       </ScrollView>
     </SafeAreaView>
+    </SignedIn>
   );
 };
 

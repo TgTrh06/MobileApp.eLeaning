@@ -1,4 +1,6 @@
+import { ViewStyle } from 'react-native';
 import { courses } from './../data/courses';
+
 export interface User {
   id: string;
   name: string;
@@ -17,25 +19,47 @@ export interface CourseProgress {
   percentage: number;
 }
 
+export interface CategorySectionProps {
+  title: string;
+  level: string; // e.g., "Basic", "Moderate", "Advance"
+  seeAllEnabled?: boolean;
+  containerStyle?: ViewStyle;
+  horizontal?: boolean;
+}
+
 export interface Course {
   id: string;
-  title: string;
-  thumbnail: string;
-  category: "Basic Courses" | "Advance Courses" | "Project & Video Courses";
-  chaptersCount: number;
-  duration: number;
-  price: number | "Free";
-  description: string;
+  name: string;
+  level: string;
+  price: number;
+  tags: string[] | string;
+  time: string;
+  author: string;
+  description: {
+    markdown: string;
+  };
+  banner?: {
+    url: string;
+  };
   chapters: Chapter[];
-  tags: string[];
 }
 
 export interface Chapter {
   id: string;
   title: string;
-  duration: number;
-  isLocked: boolean;
-  content?: string;
+  content: Content[];
+}
+
+export interface Content {
+  heading: string;
+  content: {
+    markdown?: string; // Made optional
+    html: string;
+  };
+  output: {
+    markdown?: string; // Made optional
+    html: string;
+  } | null;
 }
 
 export interface Exam {
@@ -61,6 +85,26 @@ export interface Question {
   examCategory: string; // category of the course
 }
 
+export interface EnrollCourseVariables {
+  courseIdString: string;
+  courseIdID: string;
+  userEmail: string;
+}
+
+export interface UserEnrolledCourse {
+    id: string;
+    courseId: string;
+    completedChapter: {
+      chapterId: string;
+    }[];
+}
+
+export type UserEnrolledCourses = UserEnrolledCourse[];
+
+export interface UserEnrolledCourseList {
+    userEnrolledCourses: UserEnrolledCourses;
+}
+
 export interface LeaderboardUser {
   id: string;
   name: string;
@@ -80,11 +124,12 @@ export interface SubscriptionPlan {
 
 export type RootStackParamList = {
   Welcome: undefined;
-  Auth: undefined;
+  SignIn: undefined;
+  Register: undefined;
   Main: undefined;
   Home: undefined;
-  CourseDetail: { courseId: string };
-  CourseContent: { courseId: string; chapterId: string };
+  CourseDetail: { course: Course };
+  ChapterContent: { contentList: Content[] };
   Profile: undefined;
   Leaderboard: undefined;
   Subscription: undefined;

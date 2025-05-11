@@ -15,9 +15,10 @@ import {
   Dimensions,
 } from 'react-native';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
 import { LinearGradient } from 'expo-linear-gradient';
 import { AppIcon, LockIcon, CheckIcon } from '../assets/icons';
+
+import { useSignIn, useSignUp } from '@clerk/clerk-expo';
 
 const AuthScreen: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,7 +28,9 @@ const AuthScreen: React.FC = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   
-  const { login, register } = useAuth();
+  const isLoaded = useSignIn;
+  const signIn = useSignIn();  // Clerk sign-in hook
+  const signUp = useSignUp(); // Clerk sign-up hook
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -68,24 +71,39 @@ const AuthScreen: React.FC = () => {
 
     setIsLoading(true);
     
-    try {
-      if (isLogin) {
-        const success = await login(email, password);
-        if (!success) {
-          Alert.alert('Error', 'Invalid email or password');
-        }
-      } else {
-        const success = await register(name, email, password);
-        if (!success) {
-          Alert.alert('Error', 'Registration failed. Please try again.');
-        }
-      }
-    } catch (error) {
-      Alert.alert('Error', 'An error occurred. Please try again later.');
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
+    // try {
+    //   if (isLogin) {
+    //     // Handle login with Clerk
+    //     const signInAttempt = await signIn.create({
+    //       identifier: email,
+    //       password,
+    //     });
+
+    //     if (signInAttempt.status === 'complete') {
+    //       Alert.alert('Success', 'You are now logged in!');
+    //     } else {
+    //       Alert.alert('Error', 'Invalid email or password');
+    //     }
+    //   } else {
+    //     // Handle registration with Clerk
+    //     const signUpAttempt = await signUp.create({
+    //       emailAddress: email,
+    //       password,
+    //       firstName: name,
+    //     });
+
+    //     if (signUpAttempt.status === 'complete') {
+    //       Alert.alert('Success', 'Account created successfully!');
+    //     } else {
+    //       Alert.alert('Error', 'Registration failed. Please try again.');
+    //     }
+    //   }
+    // } catch (error: any) {
+    //   Alert.alert('Error', error.message || 'An error occurred. Please try again later.');
+    //   console.error(error);
+    // } finally {
+    //   setIsLoading(false);
+    // }
   };
 
   return (

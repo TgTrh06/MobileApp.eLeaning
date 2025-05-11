@@ -4,19 +4,11 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
 import WelcomeScreen from '../screens/WelcomeScreen';
-import AuthScreen from '../screens/AuthScreen';
+import SignInScreen from '../screens/SignInScreen';
+import SignUpScreen from '../screens/SignUpScreen';
 import HomeScreen from '../screens/HomeScreen';
-import CourseDetailScreen from '../screens/CourseDetailScreen';
-import CourseContentScreen from '../screens/CourseContentScreen';
-import ProfileScreen from '../screens/ProfileScreen';
-import MyCoursesScreen from '../screens/MyCoursesScreen';
-import LeaderboardScreen from '../screens/LeaderboardScreen';
-import SubscriptionScreen from '../screens/SubscriptionScreen';
 import AchievementScreen from '../screens/AchievementScreen';
-import ApiTestScreen from '../screens/ApiTestScreen';
 
-import { RootStackParamList } from '../utils/types';
-import { useAuth } from '../context/AuthContext';
 import { colors } from '../utils/colors';
 import { 
   HomeIcon, 
@@ -24,7 +16,15 @@ import {
   AwardIcon, 
   BookIcon 
 } from '../assets/icons';
+import { SignedIn, SignedOut } from '@clerk/clerk-expo';
 import CourseExamScreen from '../screens/CourseExamScreen';
+import SubscriptionScreen from '../screens/SubscriptionScreen';
+import MyCoursesScreen from '../screens/MyCoursesScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import LeaderboardScreen from '../screens/LeaderboardScreen';
+import CourseDetailScreen from '../screens/CourseDetailScreen';
+import ChapterContentScreen from '../screens/ChapterContentScreen';
+import { CoursesProvider } from '../context/CoursesContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -39,7 +39,7 @@ const HomeStack = () => {
     >
       <Stack.Screen name="Home" component={HomeScreen} />
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
+      <Stack.Screen name="ChapterContent" component={ChapterContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
       <Stack.Screen name="Subscription" component={SubscriptionScreen} />
@@ -57,7 +57,7 @@ const MyCoursesStack = () => {
     >
       <Stack.Screen name="MyCourses" component={MyCoursesScreen} />
       <Stack.Screen name="CourseDetail" component={CourseDetailScreen} />
-      <Stack.Screen name="CourseContent" component={CourseContentScreen} />
+      <Stack.Screen name="ChapterContent" component={ChapterContentScreen} />
       <Stack.Screen name="Achievement" component={AchievementScreen} />
       <Stack.Screen name="CourseExam" component={CourseExamScreen} />
     </Stack.Navigator>
@@ -96,8 +96,7 @@ const MainTabs = () => {
       />
       <Tab.Screen 
         name="LeaderboardTab" 
-        component={ApiTestScreen} // Replace with LeaderboardScreen when ready - API Test
-        // component={LeaderboardScreen}
+        component={LeaderboardScreen}
         options={{
           tabBarLabel: 'Leaderboard',
           tabBarIcon: ({ color, size }) => (
@@ -130,20 +129,26 @@ const MainTabs = () => {
 };
 
 const Navigation = () => {
-  const { isLoggedIn } = useAuth();
 
   return (
     <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        {!isLoggedIn ? (
-          <>
-            <Stack.Screen name="Welcome" component={WelcomeScreen} />
-            <Stack.Screen name="Auth" component={AuthScreen} />
-          </>
-        ) : (
-          <Stack.Screen name="Main" component={MainTabs} />
-        )}
-      </Stack.Navigator>
+      {/* Hiển thị màn hình chính khi đã đăng nhập */}
+      <SignedIn>
+        <CoursesProvider>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="Main" component={MainTabs} />
+          </Stack.Navigator>
+        </CoursesProvider>
+      </SignedIn>
+
+      {/* Hiển thị màn hình đăng nhập/đăng ký khi chưa đăng nhập */}
+      <SignedOut>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Welcome" component={WelcomeScreen} />
+          <Stack.Screen name="SignIn" component={SignInScreen} />
+          <Stack.Screen name="Register" component={SignUpScreen} />
+        </Stack.Navigator>
+      </SignedOut>
     </NavigationContainer>
   );
 };

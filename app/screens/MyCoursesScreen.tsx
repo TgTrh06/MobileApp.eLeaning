@@ -1,23 +1,29 @@
-import React from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
+import React, { useEffect } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
   ScrollView,
   SafeAreaView,
-  FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
-import { useCourses } from '../context/CoursesContext';
 import Header from '../components/Header';
-import CourseCard from '../components/CourseCard';
+import CourseCard from '../components/home/CourseCard';
 import { BookIcon } from '../assets/icons';
+import { useUser } from '@clerk/clerk-expo';
+import { useCourses } from '../context/CoursesContext';
 
 const MyCoursesScreen: React.FC = () => {
-  const { user } = useAuth();
-  const { enrolledCourses, inProgressCourses } = useCourses();
-  
+  const { user } = useUser();
+  const { enrolledCourses, inProgressCourses, loading, error, fetchEnrolledCourses } = useCourses('');
+
+  useEffect(() => {
+    if (user) {
+      fetchEnrolledCourses(user.id);
+    }
+  }, [user]);
+
   if (!user) {
     return (
       <SafeAreaView style={styles.container}>
@@ -29,44 +35,68 @@ const MyCoursesScreen: React.FC = () => {
     );
   }
 
+  if (loading) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header title="My Courses" showBack={false} showProfile={false} />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator size="large" color={colors.primary} />
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  if (error) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header title="My Courses" showBack={false} showProfile={false} />
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyText}>{error}</Text>
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  const limitedInProgressCourses = inProgressCourses.slice(0, 5); // Limit to 5
+  const limitedEnrolledCourses = enrolledCourses.slice(0, 5); // Limit to 5
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.headerContainer}>
         <Text style={styles.headerTitle}>My Courses</Text>
       </View>
-      
       <ScrollView style={styles.scrollView}>
-        {inProgressCourses.length > 0 && (
+        {limitedInProgressCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>In Progress</Text>
             <View style={styles.coursesList}>
-              {inProgressCourses.map((course) => (
-                <CourseCard 
-                  key={course.id} 
-                  course={course} 
-                  isHorizontal={true} 
+              {limitedInProgressCourses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  isHorizontal={true}
                 />
               ))}
             </View>
           </View>
         )}
-        
-        {enrolledCourses.length > 0 && (
+
+        {limitedEnrolledCourses.length > 0 && (
           <View style={styles.sectionContainer}>
             <Text style={styles.sectionTitle}>All Enrolled Courses</Text>
             <View style={styles.coursesList}>
-              {enrolledCourses.map((course) => (
-                <CourseCard 
-                  key={course.id} 
-                  course={course} 
-                  isHorizontal={true} 
+              {limitedEnrolledCourses.map((course) => (
+                <CourseCard
+                  key={course.id}
+                  course={course}
+                  isHorizontal={true}
                 />
               ))}
             </View>
           </View>
         )}
-        
-        {enrolledCourses.length === 0 && (
+
+        {limitedEnrolledCourses.length === 0 && (
           <View style={styles.emptyCoursesContainer}>
             <BookIcon size={48} color={colors.lightGray} />
             <Text style={styles.emptyCoursesText}>
@@ -106,6 +136,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.textSecondary,
     textAlign: 'center',
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   scrollView: {
     flex: 1,

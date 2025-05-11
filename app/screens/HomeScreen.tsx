@@ -1,70 +1,59 @@
-import React, { useState, useEffect } from 'react';
-import { 
-  StyleSheet, 
-  View, 
-  Text, 
-  ScrollView, 
+import React, { useState } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  ScrollView,
   TouchableOpacity,
   SafeAreaView,
 } from 'react-native';
 import { colors } from '../utils/colors';
-import { useAuth } from '../context/AuthContext';
-import { useCourses } from '../context/CoursesContext';
 import Header from '../components/Header';
 import SearchBar from '../components/SearchBar';
-import CategorySection from '../components/CategorySection';
-import CourseCard from '../components/CourseCard';
+import CategorySection from '../components/home/CategorySection';
+import CourseCard from '../components/home/CourseCard';
+import { useUser } from '@clerk/clerk-expo';
+import { useNavigation } from '@react-navigation/native';
+import { useCourses } from '../context/CoursesContext';
 
 const HomeScreen: React.FC = () => {
-  const { user } = useAuth();
-  const { 
-    basicCourses, 
-    advancedCourses, 
-    projectCourses,
-    inProgressCourses,
-    searchCourses
-  } = useCourses();
-  
+  const navigation = useNavigation();
+  const { user } = useUser();
+  const { inProgressCourses, searchResults, searchCourses } = useCourses('');
   const [searchQuery, setSearchQuery] = useState('');
-  const [searchResults, setSearchResults] = useState<any[]>([]);
   const [isSearching, setIsSearching] = useState(false);
-  
-  // Handle search
+
   const handleSearch = () => {
-    if (searchQuery.trim()) {
-      const results = searchCourses(searchQuery);
-      setSearchResults(results);
-      setIsSearching(true);
-    } else {
-      setSearchResults([]);
+    if (!searchQuery.trim()) {
       setIsSearching(false);
+      searchCourses(''); // Clear search results if query is empty
+      return;
     }
-  };
-  
-  // Clear search
-  const clearSearch = () => {
-    setSearchQuery('');
-    setSearchResults([]);
-    setIsSearching(false);
+    setIsSearching(true);
+    searchCourses(searchQuery);
   };
 
-  // Display welcome text with user name
-  const welcomeText = `Welcome, ${user?.name || 'Student'}`;
+  const clearSearch = () => {
+    setSearchQuery('');
+    setIsSearching(false);
+    searchCourses(''); // Clear search results
+  };
+
+  const limitedInProgressCourses = inProgressCourses.slice(0, 5); // Already limited to 5 in context
 
   return (
     <SafeAreaView style={styles.container}>
       <Header title="" />
-      
       <View style={styles.welcomeContainer}>
-        <Text style={styles.welcomeText}>{welcomeText}</Text>
+        <Text style={styles.welcomeText}>
+          Hello, {user?.emailAddresses[0].emailAddress ?? 'Guest'}
+        </Text>
       </View>
-      
       <SearchBar
         value={searchQuery}
         onChangeText={setSearchQuery}
         onSubmit={handleSearch}
       />
-      
       <ScrollView
         style={styles.scrollView}
         showsVerticalScrollIndicator={false}
@@ -80,14 +69,14 @@ const HomeScreen: React.FC = () => {
                 <Text style={styles.clearSearchText}>Clear</Text>
               </TouchableOpacity>
             </View>
-            
             {searchResults.length > 0 ? (
               <View style={styles.searchResultsList}>
                 {searchResults.map((course) => (
-                  <CourseCard 
-                    key={course.id} 
-                    course={course} 
-                    isHorizontal={true} 
+                  <CourseCard
+                    key={course.id}
+                    course={course}
+                    isHorizontal={true}
+                    showPrice={true}
                   />
                 ))}
               </View>
@@ -101,35 +90,28 @@ const HomeScreen: React.FC = () => {
           </View>
         ) : (
           <>
-            {inProgressCourses.length > 0 && (
+            {limitedInProgressCourses.length > 0 && (
               <View style={styles.inProgressContainer}>
                 <Text style={styles.sectionTitle}>In Progress</Text>
-                <ScrollView 
-                  horizontal 
+                <ScrollView
+                  horizontal
                   showsHorizontalScrollIndicator={false}
                   contentContainerStyle={styles.progressCoursesContainer}
                 >
-                  {inProgressCourses.map((course) => (
-                    <CourseCard key={course.id} course={course} showPrice={false} />
+                  {limitedInProgressCourses.map((course) => (
+                    <CourseCard
+                      key={course.id}
+                      course={course}
+                      isHorizontal={true}
+                      showPrice={false}
+                    />
                   ))}
                 </ScrollView>
               </View>
             )}
-            
-            <CategorySection
-              title="Basic Courses"
-              courses={basicCourses}
-            />
-            
-            <CategorySection
-              title="Advance Courses"
-              courses={advancedCourses}
-            />
-            
-            <CategorySection
-              title="Project & Video Courses"
-              courses={projectCourses}
-            />
+            <CategorySection title="Basic Courses" level="Basic" />
+            <CategorySection title="Moderate Courses" level="Moderate" />
+            <CategorySection title="Advanced Courses" level="Advance" />
           </>
         )}
       </ScrollView>
