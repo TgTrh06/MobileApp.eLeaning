@@ -1,7 +1,8 @@
 import React from 'react';
+import Toast from 'react-native-toast-message';
+import Navigation from './navigation';
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import Navigation from './navigation';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { NavigationIndependentTree } from '@react-navigation/native';
 import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo'; 
@@ -19,7 +20,7 @@ export default function App() {
   return (
     <ClerkProvider 
       publishableKey={publishableKey}
-      tokenCache={tokenCache} // Pass tokenCache here
+      tokenCache={tokenCache}
     >
       <ClerkLoaded>
         <NavigationIndependentTree>
@@ -29,6 +30,7 @@ export default function App() {
             <SafeAreaProvider>
                 <StatusBar style="auto" />
                 <Navigation />
+                <Toast /> {/*Message provider of react-native*/}
             </SafeAreaProvider>
             </CoursesProvider>
             </AuthProvider>

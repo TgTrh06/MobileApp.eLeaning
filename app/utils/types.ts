@@ -70,6 +70,26 @@ export interface Question {
   examCategory: string; // category of the course
 }
 
+export interface EnrollCourseVariables {
+  courseIdString: string;
+  courseIdID: string;
+  userEmail: string;
+}
+
+export interface UserEnrolledCourse {
+    id: string;
+    courseId: string;
+    completedChapter: {
+      chapterId: string;
+    }[];
+}
+
+export type UserEnrolledCourses = UserEnrolledCourse[];
+
+export interface UserEnrolledCourseList {
+    userEnrolledCourses: UserEnrolledCourses;
+}
+
 export interface LeaderboardUser {
   id: string;
   name: string;

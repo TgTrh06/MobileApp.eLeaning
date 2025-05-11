@@ -15,17 +15,36 @@ import {
   CrownIcon,
   SmileIcon,
 } from "@/app/assets/icons";
-import { Course } from "@/app/utils/types";
+import {
+  Course,
+  UserEnrolledCourseList,
+  UserEnrolledCourses,
+} from "@/app/utils/types";
 
-export default function DetailSection({ course }: { course: Course }) {
+interface Props {
+  course: Course;
+  userEnrolledCourses: UserEnrolledCourses;
+  enrollCourse: () => void;
+}
+
+export default function DetailSection({
+  course,
+  userEnrolledCourses,
+  enrollCourse,
+}: Props) {
   return (
     <View
-      style={{ padding: 10, borderRadius: 15, backgroundColor: colors.white }}
+      style={{
+        padding: 10,
+        marginTop: 10,
+        borderRadius: 20,
+        backgroundColor: colors.white,
+      }}
     >
       <Image
         source={{ uri: course?.banner?.url }}
         style={{
-          width: '100%',
+          width: "100%",
           height: 190,
           borderRadius: 15,
         }}
@@ -37,7 +56,8 @@ export default function DetailSection({ course }: { course: Course }) {
           <View style={styles.metaItem}>
             <BookIcon size={18} color={colors.black} />
             <Text style={styles.metaText}>
-              {course.chapters.length} {course.chapters.length === 1 ? "Chapter" : "Chapters"}
+              {course.chapters.length}{" "}
+              {course.chapters.length === 1 ? "Chapter" : "Chapters"}
             </Text>
           </View>
           <View style={styles.metaItem}>
@@ -56,14 +76,14 @@ export default function DetailSection({ course }: { course: Course }) {
           </View>
         </View>
       </View>
-        <View
-          style={{
-            height: 1,
-            backgroundColor: colors.primary,
-            marginVertical: 6,
-            marginHorizontal: 10,
-          }}
-        />
+      <View
+        style={{
+          height: 1,
+          backgroundColor: colors.primary,
+          marginVertical: 6,
+          marginHorizontal: 10,
+        }}
+      />
       <View style={{ marginVertical: 10, paddingHorizontal: 4 }}>
         <Text style={styles.descriptionTitle}>Description</Text>
         <Text style={styles.descriptionInfo}>
@@ -76,14 +96,19 @@ export default function DetailSection({ course }: { course: Course }) {
           flexDirection: "row",
           justifyContent: "space-evenly",
           gap: 10,
-          marginBottom: 6
+          marginBottom: 4,
         }}
       >
-        <TouchableOpacity style={styles.enrollButtonPr}>
-          <Text style={styles.enrollText}>Enroll for free</Text>
-        </TouchableOpacity>
+        {userEnrolledCourses?.length == 0 ? (
+          <TouchableOpacity
+            onPress={() => enrollCourse()}
+            style={styles.enrollButtonPr}
+          >
+            <Text style={styles.enrollText}>Enroll for free</Text>
+          </TouchableOpacity>
+        ) : null}
         <TouchableOpacity style={styles.enrollButtonSe}>
-          <CrownIcon size={18} color={colors.yellow}/>
+          <CrownIcon size={18} color={colors.yellow} />
           <Text style={styles.enrollText}>Membership</Text>
         </TouchableOpacity>
       </View>
@@ -96,7 +121,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     marginTop: 10,
     marginBottom: 10,
-    fontWeight: 600, 
+    fontWeight: 600,
   },
   rowItem: {
     display: "flex",
@@ -117,8 +142,8 @@ const styles = StyleSheet.create({
   },
   descriptionTitle: {
     fontSize: 20,
-    fontWeight: 600, 
-    padding: 5 
+    fontWeight: 600,
+    padding: 5,
   },
   descriptionInfo: {
     fontSize: 16,
@@ -130,23 +155,23 @@ const styles = StyleSheet.create({
     padding: 16,
     backgroundColor: colors.primary,
     borderRadius: 15,
-    width: '44%',
-    alignItems: 'center',
+    width: "44%",
+    alignItems: "center",
   },
   enrollButtonSe: {
-    display: 'flex',
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-evenly",
     padding: 16,
     backgroundColor: colors.secondary,
     borderRadius: 15,
-    width: '50%',
-    alignItems: 'center',
+    width: "50%",
+    alignItems: "center",
   },
   enrollText: {
     color: colors.white,
     alignItems: "center",
     fontSize: 15,
-    fontWeight: 600, 
+    fontWeight: 600,
   },
 });

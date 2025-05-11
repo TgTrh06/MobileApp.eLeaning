@@ -15,7 +15,7 @@ export default function ChapterSection({
         padding: 15,
         marginTop: 20,
         backgroundColor: colors.white,
-        borderRadius: 15,
+        borderRadius: 20,
       }}
     >
       <Text style={styles.titleFont}>Chapters</Text>
