@@ -16,34 +16,37 @@ const levelMap: Record<string, 'basic' | 'moderate' | 'advance'> = {
 const CategorySection: React.FC<CategorySectionProps> = ({
   title,
   level,
-  seeAllEnabled = true,
+  seeMoreEnabled = true,
   containerStyle,
   horizontal = true,
 }) => {
   const navigation = useNavigation();
   const { allCourses, loading, error } = useCourses('');
-
-  const filteredCourses = allCourses
+  const [numberOfCourses, setNumberOfCourses] = useState(5);
+  const [filteredCourses, setFilteredCourses] = useState(allCourses
     .filter((course) => levelMap[level] === course.level.toLowerCase())
-    .slice(0, 5); // Limit to 5 courses
+    .slice(0, 5));
 
-  const handleSeeAll = () => {
-    (navigation as any).navigate('CourseList', {
-      screen: 'CourseList',
-      params: {
-        level: levelMap[level],
-        title,
-      },
-    });
+  useEffect(() => {
+    setFilteredCourses(allCourses
+      .filter((course) => levelMap[level] === course.level.toLowerCase())
+      .slice(0, numberOfCourses));
+  }, [allCourses, level, numberOfCourses]);
+
+  const handleSeeMore = () => {
+    setNumberOfCourses(numberOfCourses + 5);
+    setFilteredCourses(allCourses
+    .filter((course) => levelMap[level] === course.level.toLowerCase())
+    .slice(0, numberOfCourses));
   };
 
   return (
     <View style={[styles.container, containerStyle]}>
       <View style={styles.header}>
         <Text style={styles.title}>{title}</Text>
-        {seeAllEnabled && (
-          <TouchableOpacity style={styles.seeAllButton} onPress={handleSeeAll}>
-            <Text style={styles.seeAllText}>See All</Text>
+        {seeMoreEnabled && (
+          <TouchableOpacity style={styles.seeMoreButton} onPress={handleSeeMore}>
+            <Text style={styles.seeMoreText}>See More</Text>
             <ChevronRightIcon size={16} color={colors.primary} />
           </TouchableOpacity>
         )}
@@ -87,11 +90,11 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     color: colors.textPrimary,
   },
-  seeAllButton: {
+  seeMoreButton: {
     flexDirection: 'row',
     alignItems: 'center',
   },
-  seeAllText: {
+  seeMoreText: {
     fontSize: 14,
     color: colors.primary,
     fontWeight: '600',

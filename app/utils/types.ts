@@ -27,7 +27,7 @@ export interface CourseProgress {
 export interface CategorySectionProps {
   title: string;
   level: string; // e.g., "Basic", "Moderate", "Advance"
-  seeAllEnabled?: boolean;
+  seeMoreEnabled?: boolean;
   containerStyle?: ViewStyle;
   horizontal?: boolean;
 }
