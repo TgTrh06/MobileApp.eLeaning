@@ -54,6 +54,7 @@ const ChapterContent: React.FC<Props> = ({ chapter, onChapterFinish }) => {
 
   const onFinishButton = () => {
     onChapterFinish();
+    navigation.goBack();
   }
 
   const onExamButton = () => {

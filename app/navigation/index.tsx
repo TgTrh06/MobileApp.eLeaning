@@ -95,6 +95,11 @@ const MainTabs = () => {
             <HomeIcon color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('HomeTab'); // Navigate to the root screen of the tab
+          },
+        })}
       />
       <Tab.Screen
         name="LeaderboardTab"
@@ -105,6 +110,11 @@ const MainTabs = () => {
             <AwardIcon color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('LeaderboardTab'); // Navigate to the root screen of the tab
+          },
+        })}
       />
       <Tab.Screen
         name="MyCourses"
@@ -115,6 +125,11 @@ const MainTabs = () => {
             <BookIcon color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('MyCourses'); // Navigate to the root screen of the "MyCourses" stack
+          },
+        })}
       />
       <Tab.Screen
         name="ProfileTab"
@@ -125,6 +140,11 @@ const MainTabs = () => {
             <ProfileIcon color={color} size={size} />
           ),
         }}
+        listeners={({ navigation }) => ({
+          tabPress: () => {
+            navigation.navigate('ProfileTab'); // Navigate to the root screen of the "ProfileTab"
+          },
+        })}
       />
     </Tab.Navigator>
   );

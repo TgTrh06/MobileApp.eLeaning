@@ -45,7 +45,6 @@ export default function ChapterContentScreen() {
       if (resp) {
         notify('success', "Course Completed.")
         markChapterComplete();
-        navigation.goBack();
       }
     })
     .catch(err => {
