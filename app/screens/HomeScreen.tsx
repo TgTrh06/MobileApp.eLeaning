@@ -15,6 +15,8 @@ import CourseCard from '../components/home/CourseCard';
 import { useUser } from '@clerk/clerk-expo';
 import { useNavigation } from '@react-navigation/native';
 import { useCourses } from '../context/CoursesContext';
+import { getUserDetail } from '../services';
+import { useUserPoints } from '../context/UserPointContext';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -22,6 +24,7 @@ const HomeScreen: React.FC = () => {
   const { inProgressCourses, searchResults, searchCourses } = useCourses('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
+  const { userPoints, setUserPoints, addPoints } = useUserPoints();
 
   const handleSearch = () => {
     if (!searchQuery.trim()) {
@@ -40,6 +43,16 @@ const HomeScreen: React.FC = () => {
   };
 
   const limitedInProgressCourses = inProgressCourses.slice(0, 5); // Already limited to 5 in context
+
+  const getUser = () => {
+    if (user?.primaryEmailAddress?.emailAddress) {
+      getUserDetail(user.primaryEmailAddress.emailAddress)
+      .then(resp => {
+        console.log("User detail: ", resp)
+        setUserPoints(resp.detail.point);
+      })
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>

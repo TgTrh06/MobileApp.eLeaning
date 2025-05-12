@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react'; // Import useState
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -10,11 +10,11 @@ import HomeScreen from '../screens/HomeScreen';
 import AchievementScreen from '../screens/AchievementScreen';
 
 import { colors } from '../utils/colors';
-import { 
-  HomeIcon, 
-  ProfileIcon, 
-  AwardIcon, 
-  BookIcon 
+import {
+  HomeIcon,
+  ProfileIcon,
+  AwardIcon,
+  BookIcon
 } from '../assets/icons';
 import { SignedIn, SignedOut } from '@clerk/clerk-expo';
 import CourseExamScreen from '../screens/CourseExamScreen';
@@ -25,14 +25,16 @@ import LeaderboardScreen from '../screens/LeaderboardScreen';
 import CourseDetailScreen from '../screens/CourseDetailScreen';
 import ChapterContentScreen from '../screens/ChapterContentScreen';
 import { CoursesProvider } from '../context/CoursesContext';
+import { CompleteChapterProvider } from '../context/CompleteChapterContext'; // Import the context
+import { UserPointProvider } from '../context/UserPointContext';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
 const HomeStack = () => {
   return (
-    <Stack.Navigator 
-      screenOptions={{ 
+    <Stack.Navigator
+      screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: colors.background }
       }}
@@ -49,8 +51,8 @@ const HomeStack = () => {
 
 const MyCoursesStack = () => {
   return (
-    <Stack.Navigator 
-      screenOptions={{ 
+    <Stack.Navigator
+      screenOptions={{
         headerShown: false,
         contentStyle: { backgroundColor: colors.background }
       }}
@@ -84,9 +86,9 @@ const MainTabs = () => {
         },
       }}
     >
-      <Tab.Screen 
-        name="HomeTab" 
-        component={HomeStack} 
+      <Tab.Screen
+        name="HomeTab"
+        component={HomeStack}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
@@ -94,8 +96,8 @@ const MainTabs = () => {
           ),
         }}
       />
-      <Tab.Screen 
-        name="LeaderboardTab" 
+      <Tab.Screen
+        name="LeaderboardTab"
         component={LeaderboardScreen}
         options={{
           tabBarLabel: 'Leaderboard',
@@ -104,9 +106,9 @@ const MainTabs = () => {
           ),
         }}
       />
-      <Tab.Screen 
-        name="MyCourses" 
-        component={MyCoursesStack} 
+      <Tab.Screen
+        name="MyCourses"
+        component={MyCoursesStack}
         options={{
           tabBarLabel: 'My Courses',
           tabBarIcon: ({ color, size }) => (
@@ -114,9 +116,9 @@ const MainTabs = () => {
           ),
         }}
       />
-      <Tab.Screen 
-        name="ProfileTab" 
-        component={ProfileScreen} 
+      <Tab.Screen
+        name="ProfileTab"
+        component={ProfileScreen}
         options={{
           tabBarLabel: 'Profile',
           tabBarIcon: ({ color, size }) => (
@@ -135,9 +137,13 @@ const Navigation = () => {
       {/* Hiển thị màn hình chính khi đã đăng nhập */}
       <SignedIn>
         <CoursesProvider>
-          <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="Main" component={MainTabs} />
-          </Stack.Navigator>
+          <CompleteChapterProvider>
+            <UserPointProvider>
+              <Stack.Navigator screenOptions={{ headerShown: false }}>
+                <Stack.Screen name="Main" component={MainTabs} />
+              </Stack.Navigator>
+            </UserPointProvider>
+          </CompleteChapterProvider>
         </CoursesProvider>
       </SignedIn>
 
