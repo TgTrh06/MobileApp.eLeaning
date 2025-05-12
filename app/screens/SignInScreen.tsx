@@ -30,7 +30,7 @@ export default function SignInScreen() {
   };
 
   const handleMain = () => {
-    navigation.navigate('Main' as never);
+    (navigation as any).navigate('HomeTab', { screen: 'Home' });
   };
 
   const onSignInPress = async () => {
@@ -49,7 +49,7 @@ export default function SignInScreen() {
 
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId });
-        handleMain(); // Navigate to the Home screen
+        // handleMain(); // Navigate to the Home screen
       } else {
         setErrorMessage('Sign-in requires additional steps. Please check your email.');
       }

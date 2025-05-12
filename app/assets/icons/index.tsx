@@ -1,8 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Entypo, Feather, Ionicons } from '@expo/vector-icons';
+import { Feather } from '@expo/vector-icons';
 import { colors } from '../../utils/colors';
-import FontAwesome5 from '@expo/vector-icons/FontAwesome5';
 
 interface IconProps {
   name: string;
@@ -60,32 +59,11 @@ export const BookIcon: React.FC<{ size?: number; color?: string }> = ({
   return <Feather name="book" size={size} color={color} />;
 };
 
-export const BarChartIcon: React.FC<{ size?: number; color?: string }> = ({ 
-  size = 24, 
-  color = colors.primary 
-}) => {
-  return <Feather name="bar-chart" size={size} color={color} />;
-};
-
-export const SmileIcon: React.FC<{ size?: number; color?: string }> = ({ 
-  size = 24, 
-  color = colors.primary 
-}) => {
-  return <Feather name="smile" size={size} color={color} />;
-};
-
-export const CrownIcon: React.FC<{ size?: number; color?: string }> = ({ 
-  size = 24, 
-  color = colors.primary 
-}) => {
-  return <FontAwesome5 name="crown" size={size} color={color} />;
-};
-
 export const PlayIcon: React.FC<{ size?: number; color?: string }> = ({ 
   size = 24, 
   color = colors.primary 
 }) => {
-  return <FontAwesome5 name="play" size={size} color={color} />;
+  return <Feather name="play" size={size} color={color} />;
 };
 
 export const ClockIcon: React.FC<{ size?: number; color?: string }> = ({ 
@@ -99,7 +77,7 @@ export const LockIcon: React.FC<{ size?: number; color?: string }> = ({
   size = 24, 
   color = colors.primary 
 }) => {
-  return <Entypo name="lock" size={size} color={color} />;
+  return <Feather name="lock" size={size} color={color} />;
 };
 
 export const CheckIcon: React.FC<{ size?: number; color?: string }> = ({ 
@@ -107,6 +85,13 @@ export const CheckIcon: React.FC<{ size?: number; color?: string }> = ({
   color = colors.primary 
 }) => {
   return <Feather name="check-circle" size={size} color={color} />;
+};
+
+export const WrongIcon: React.FC<{ size?: number; color?: string }> = ({ 
+  size = 24, 
+  color = colors.primary 
+}) => {
+  return <Feather name="x-circle" size={size} color={color} />;
 };
 
 export const StarIcon: React.FC<{ size?: number; color?: string }> = ({ 

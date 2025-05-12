@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
     height: 220,
   },
   horizontalContainer: {
-    width: 210,
-    height: 120,
-    flexDirection: "row",
+    width: '100%',
+    height: 200,
+    // flexDirection: "row",
   },
   infoContainer: {
     padding: 12,

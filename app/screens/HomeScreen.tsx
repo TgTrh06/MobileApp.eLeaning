@@ -102,7 +102,7 @@ const HomeScreen: React.FC = () => {
                     <CourseCard
                       key={course.id}
                       course={course}
-                      isHorizontal={true}
+                      isHorizontal={false}
                       showPrice={false}
                     />
                   ))}

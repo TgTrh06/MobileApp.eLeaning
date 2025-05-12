@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Text, TouchableOpacity } from 'react-native';
 import { colors } from '../utils/colors';
-import { CheckIcon, LockIcon, PlayIcon } from '../assets/icons';
+import { CheckIcon, LockIcon, PlayIcon, WrongIcon } from '../assets/icons';
 import { Question } from '../utils/types';
 import { formatDuration } from '../utils/helpers';
 import { useAuth } from '../context/AuthContext';
@@ -36,7 +36,8 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
       <TouchableOpacity
         style={[
           styles.container,
-          Completed && styles.completedContainer,
+          Completed && selectedAnswer === question.correctAnswer && styles.completedContainer,
+          Completed && selectedAnswer !== question.correctAnswer && styles.incorrectAnswerButton,
           question.isLocked && styles.lockedContainer,
         ]}
         onPress={() => setShowAnswers(true)}
@@ -46,11 +47,14 @@ const QuestionItem: React.FC<QuestionItemProps> = ({
         <View style={styles.leftContainer}>
           <View style={[
             styles.iconContainer,
-            Completed && styles.completedIconContainer,
+            Completed && selectedAnswer === question.correctAnswer && styles.completedContainer,
+            Completed && selectedAnswer !== question.correctAnswer && styles.incorrectAnswerButton,
             question.isLocked && styles.lockedIconContainer,
           ]}>
-            {Completed ? (
+            {Completed && selectedAnswer === question.correctAnswer ? (
               <CheckIcon size={16} color={colors.white} />
+            ) : Completed && selectedAnswer !== question.correctAnswer ? (
+              <WrongIcon size={16} color={colors.white} />
             ) : question.isLocked ? (
               <LockIcon size={16} color={colors.white} />
             ) : (

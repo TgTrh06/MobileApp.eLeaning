@@ -11,7 +11,6 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { colors } from '../utils/colors';
 import Header from '../components/Header';
-import CourseCard from '../components/CourseCard';
 import {
   BookIcon,
   SettingsIcon,
