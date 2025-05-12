@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Toast from 'react-native-toast-message';
 import Navigation from './navigation';
 import { StatusBar } from 'expo-status-bar';
@@ -9,6 +9,8 @@ import { ClerkProvider, ClerkLoaded } from '@clerk/clerk-expo';
 import { tokenCache } from '@clerk/clerk-expo/token-cache'; 
 import { CoursesProvider } from './context/CoursesContext';
 import { AuthProvider } from './context/AuthContext';
+import { CompleteChapterProvider } from './context/CompleteChapterContext';
+import { UserPointProvider } from './context/UserPointContext';
 
 export default function App() {
   const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
@@ -22,21 +24,23 @@ export default function App() {
       publishableKey={publishableKey}
       tokenCache={tokenCache}
     >
-      <ClerkLoaded>
         <NavigationIndependentTree>
           <GestureHandlerRootView style={{ flex: 1 }}>
             <AuthProvider>
-            <CoursesProvider>
-            <SafeAreaProvider>
-                <StatusBar style="auto" />
-                <Navigation />
-                <Toast /> {/*Message provider of react-native*/}
-            </SafeAreaProvider>
-            </CoursesProvider>
+              <CoursesProvider>
+                <CompleteChapterProvider>
+                  <UserPointProvider>
+                    <SafeAreaProvider>
+                      <StatusBar style="auto" />
+                      <Navigation />
+                      <Toast /> {/*Message provider of react-native*/}
+                    </SafeAreaProvider>
+                  </UserPointProvider>
+                </CompleteChapterProvider>
+              </CoursesProvider>
             </AuthProvider>
           </GestureHandlerRootView>
         </NavigationIndependentTree>
-      </ClerkLoaded>
     </ClerkProvider>
   );
 }

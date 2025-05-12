@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, TouchableOpacity } from "react-native";
 import Toast from 'react-native-toast-message';
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigation } from "expo-router";
 import { useRoute } from "@react-navigation/native";
 import { Course, UserEnrolledCourses } from "../utils/types";
@@ -11,13 +11,15 @@ import { colors } from "../utils/colors";
 import { ScrollView } from "react-native-gesture-handler";
 import { enrollCourse, getUserEnrollCourse } from "../services";
 import { useUser } from "@clerk/clerk-expo";
+import { useCompleteChapter } from "../context/CompleteChapterContext";
 
 export default function CourseDetailScreen() {
   const navigation = useNavigation();
   const params = useRoute().params as { course: Course };
   const [userEnrolledCourseList, setUserEnrolledCourse] = useState<UserEnrolledCourses>([]);
   const {user} = useUser();
-
+  const { isChapterComplete, markChapterComplete } = useCompleteChapter();
+  
   const userEmail = user?.primaryEmailAddress?.emailAddress;
   const courseId = params?.course?.id;
     
@@ -36,6 +38,10 @@ export default function CourseDetailScreen() {
     }
   }, [params.course]);
 
+  useEffect(() => {
+    isChapterComplete && GetUserEnrolledCourse();
+  }, [isChapterComplete])
+
   const UserEnrollCourse = () => {    
     
     if (!userEmail) {
@@ -48,7 +54,7 @@ export default function CourseDetailScreen() {
       return;
     } 
     
-    enrollCourse(courseId, userEmail)
+  enrollCourse(courseId, userEmail)
     .then (resp => {
       console.log("Enroll response:", resp);
       if (resp) {

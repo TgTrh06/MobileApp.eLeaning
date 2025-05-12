@@ -1,16 +1,21 @@
 import { ViewStyle } from 'react-native';
 import { courses } from './../data/courses';
 
-export interface User {
-  id: string;
-  name: string;
+export interface UserDetailVariables {
   email: string;
-  password?: string;
-  points: number;
-  avatar?: string;
-  enrolledCourses: string[];
-  completedCourses: string[];
-  progress: Record<string, CourseProgress>;
+  point: number;
+  userName: string;
+  profileImage: string;
+}
+
+export interface User {
+  detail: {
+    id: string;
+    email: string;
+    point: number;
+    userName: string;
+    profileImage: string;
+  }
 }
 
 export interface CourseProgress {
@@ -51,6 +56,7 @@ export interface Chapter {
 }
 
 export interface Content {
+  id: string;
   heading: string;
   content: {
     markdown?: string; // Made optional
@@ -83,6 +89,19 @@ export interface Question {
   isLocked?: boolean; // for tracking if the question is locked
   duration: number; // duration for the question
   examCategory: string; // category of the course
+}
+
+
+export interface CreateUserEnrolledResponse {
+  createUserEnrolledCourse: { 
+    id: string;
+  };
+}
+
+export interface PublishUserEnrolledResponse {
+  publishUserEnrolledCourse: {
+    id: string;
+  };
 }
 
 export interface EnrollCourseVariables {
@@ -129,7 +148,7 @@ export type RootStackParamList = {
   Main: undefined;
   Home: undefined;
   CourseDetail: { course: Course };
-  ChapterContent: { contentList: Content[] };
+  ChapterContent: { chapter: Chapter; enrollmentId: string};
   Profile: undefined;
   Leaderboard: undefined;
   Subscription: undefined;
