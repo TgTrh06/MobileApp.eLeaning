@@ -13,6 +13,7 @@ interface Props {
   description: string;
   output?: string;
 }
+
 const ContentItem: React.FC<Props> = ({ description, output }) => {
   const { width } = useWindowDimensions();
   const [isRun, setIsRun] = useState(false);
@@ -73,7 +74,7 @@ const outputStyles = {
     fontSize: 16,
     backgroundColor: colors.black,
     color: colors.white,
-    padding: 10,
+    padding: 15,
     borderRadius: 15,
   },
   code: {
